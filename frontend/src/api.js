@@ -13,6 +13,21 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+// handle expired or invalid token (401 Unauthorized)
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('user');
+      // Only redirect if we are not already on the login or signup page
+      if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/signup')) {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 // auth api calls
 export const loginUser = (data) => API.post('/auth/login', data);
 export const signupUser = (data) => API.post('/auth/signup', data);
