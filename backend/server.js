@@ -7,6 +7,13 @@ const connectDB = require('./config/db');
 // load env variables
 dotenv.config();
 
+// validate essential env variables
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL ERROR: JWT_SECRET is not defined in environment variables.');
+  console.error('If you are on Railway, go to Variables and add JWT_SECRET.');
+  process.exit(1);
+}
+
 // connect to database
 connectDB();
 
@@ -48,3 +55,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
